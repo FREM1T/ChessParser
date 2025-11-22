@@ -8,10 +8,6 @@ from chess_res_api import *
 profile_url = get_url()
 
 responce = get_html(profile_url)
-
-if responce:
-    info = get_nRating(get_tables(responce)[0])
-
-    print(*info)
-else:
-    print("Информация отсутсвует...")
+block = get_tables(responce=responce)
+d = get_profile(block)
+create_table(d)
