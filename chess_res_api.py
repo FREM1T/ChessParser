@@ -51,7 +51,7 @@ def get_profile(block: list) -> dict:
     player_info = get_player_info(block[0]) # Массив с информацией об игроке
     chess_profile = dict()                  # Инициализация словаря
 
-    # Находим где располагается нац.рейт
+    # Находим индекс нац.рейт.
     line_ind = matches.pop(0).find_all("th")
     nat_rat_flag = False
     i_rating = 0
@@ -63,7 +63,7 @@ def get_profile(block: list) -> dict:
 
     # Заполняем данные для профиля
     chess_profile["Fullname"] = player_info[0]
-    chess_profile["National rating"] = int(player_info[1]) if player_info[1] else 0
+    chess_profile["National rating"] = int(player_info[1]) if player_info[1] else 1000
 
     # Заполняем данные о турнире
     matches_list = [] # Массив для оппонентов
@@ -75,21 +75,28 @@ def get_profile(block: list) -> dict:
         if nat_rat_flag:
             nat_rating = int(fields[i_rating].text)
         else:
-            nat_rating = 0
+            nat_rating = 1000
         # res = (fields[i_res].text)
-        opponent = {"Fullname": fullname, "National rating": nat_rating, "Results": res}
+        # Обработка res
+        if res == "½":
+            res = 0.5
+        else:
+            res = float(res)
+        
+        opponent = {"Fullname": fullname, "National rating": nat_rating, "Result": res}
         matches_list.append(opponent)
 
     chess_profile["Opponents"] = matches_list
 
     return chess_profile
 
-def create_table(obj: dict, filename = "log.json") -> None:
+def create_table(obj: dict, filename = "profile.json") -> None:
     '''
     Функция записывает в файл {filename}.json словарь, переданный в аргемент
     '''
 
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(obj, f, ensure_ascii=False, indent=4)
-
+    f.close()
+    
     return None
