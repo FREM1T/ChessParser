@@ -1,0 +1,31 @@
+{
+    "Fullname": "Carlsen  Magnus ",
+    "National rating": 1000,
+    "Opponents": [
+        {
+            "Fullname": "Gelfand Boris",
+            "National rating": 1000,
+            "Result": 1.0
+        },
+        {
+            "Fullname": "Aronian Levon",
+            "National rating": 1000,
+            "Result": 0.0
+        },
+        {
+            "Fullname": "Nakamura Hikaru",
+            "National rating": 1000,
+            "Result": 0.5
+        },
+        {
+            "Fullname": "Caruana Fabiano",
+            "National rating": 1000,
+            "Result": 0.0
+        },
+        {
+            "Fullname": "Anand Viswanathan",
+            "National rating": 1000,
+            "Result": 0.5
+        }
+    ]
+}

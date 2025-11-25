@@ -19,3 +19,9 @@ def get_url() -> str:
         url = input("Пожалуйста, вставьте url на профиль игрока: ")
     
     return url
+
+def print_results(old_r: int, new_r: int, url: str) -> None:
+    print("#"*100)
+    print(f"Профиль игрока: {url}")
+    print(f"Старый нац.рейтинг: {old_r}\nНовый нац.рейтинг: {new_r}")
+    print("#"*100)

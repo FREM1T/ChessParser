@@ -57,3 +57,11 @@ def get_newRating() -> int:
     f.close()
     
     return int(Rn)
+
+def get_oldRating() -> int:
+    Ro = 0
+    with open("profile.json", "r", encoding="utf-8") as f:
+        d = json.load(f)
+        Ro = d["National rating"]
+    
+    return Ro

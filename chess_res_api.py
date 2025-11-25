@@ -39,7 +39,7 @@ def get_player_info(table) -> list:
 def get_matches(table) -> list:
     info = table.find_all("tr")
     matches = info
-    return matches
+    return matches    
 
 def get_profile(block: list) -> dict:
     '''
@@ -55,7 +55,10 @@ def get_profile(block: list) -> dict:
     line_ind = matches.pop(0).find_all("th")
     nat_rat_flag = False
     i_rating = 0
+    i_fullname = 0
     for i in range(len(line_ind)):
+        if line_ind[i].text == "Имя":
+            i_fullname = i
         if line_ind[i].text == "Рейт.Нац.":
             nat_rat_flag = True
             i_rating = i
@@ -63,7 +66,9 @@ def get_profile(block: list) -> dict:
 
     # Заполняем данные для профиля
     chess_profile["Fullname"] = player_info[0]
-    chess_profile["National rating"] = int(player_info[1]) if player_info[1] else 1000
+    if player_info[1]:
+        chess_profile["National rating"] = int(player_info[1]) if int(player_info[1]) >= 1000 else 1000
+    else: chess_profile["National rating"] = 1000
 
     # Заполняем данные о турнире
     matches_list = [] # Массив для оппонентов
@@ -71,7 +76,7 @@ def get_profile(block: list) -> dict:
         fields = matches[i].find_all("td")
 
         res = matches[i].find("table").find("td", class_="CR").text
-        fullname = fields[4].text
+        fullname = fields[i_fullname].text
         if nat_rat_flag:
             nat_rating = int(fields[i_rating].text)
         else:
