@@ -1,6 +1,6 @@
 from requests import get
 from bs4 import BeautifulSoup
-from utils import get_url, print_results
+from utils import get_url, print_results, print_info
 from chess_res_api import *
 from chess_calc import get_newRating, get_oldRating
 
@@ -19,6 +19,9 @@ def main_menu():
             create_table(d)
 
             print_results(get_oldRating(), get_newRating(), profile_url)
+
+            print_info()
+            
         else:
             # Ошибка доступа к сайту
             print("Сайт временно недоступен, повторите попытку попозже")

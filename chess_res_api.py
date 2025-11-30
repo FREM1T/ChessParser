@@ -32,7 +32,11 @@ def get_player_info(table) -> list:
     '''
     info = table.find_all("tr")
     fullname = (info[0].text)[3:].replace(",", "") # ФИО
-    nat_rating = (info[3].text)[11:]
+    # Нахождение положения нац.рейт.
+    for i in range(len(info)):
+        tmp = info[i].find_all("td")
+        if tmp[0].text == "Нац.рейтинг":
+            nat_rating = tmp[1].text
     player_info = [fullname, nat_rating]
     return player_info
 
@@ -72,16 +76,25 @@ def get_profile(block: list) -> dict:
 
     # Заполняем данные о турнире
     matches_list = [] # Массив для оппонентов
-    for i in range(0, len(matches), 2):
+    i = 0
+    while i < len(matches):
         fields = matches[i].find_all("td")
+        
+        # Обработка bye
 
-        res = matches[i].find("table").find("td", class_="CR").text
-        fullname = fields[i_fullname].text
-        if nat_rat_flag:
-            nat_rating = int(fields[i_rating].text)
+        if fields[i_fullname].text == "bye":
+            res = "-1"
+            nat_rating = "-"
+            fullname = fields[i_fullname].text
         else:
-            nat_rating = 1000
-        # res = (fields[i_res].text)
+            res = matches[i].find("table").find("td", class_="CR").text
+            fullname = fields[i_fullname].text
+            if nat_rat_flag:
+                nat_rating = int(fields[i_rating].text)
+            else:
+                nat_rating = 1000
+            i += 1
+
         # Обработка res
         if res == "½":
             res = 0.5
@@ -90,6 +103,7 @@ def get_profile(block: list) -> dict:
         
         opponent = {"Fullname": fullname, "National rating": nat_rating, "Result": res}
         matches_list.append(opponent)
+        i += 1
 
     chess_profile["Opponents"] = matches_list
 

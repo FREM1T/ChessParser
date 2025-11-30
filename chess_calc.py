@@ -28,7 +28,7 @@ def get_probability(prof_rat = 1000, opp_rat = 1000) -> float:
             a, b = map(int, line[0].split("-"))
             p1, p2 = map(float, [line[1], line[2]])
             if a <= abs(prof_rat-opp_rat) <= b:
-                prob = p1 if prof_rat < opp_rat else p2
+                prob = p1 if prof_rat > opp_rat else p2
                 break
     f.close()
     
@@ -47,13 +47,17 @@ def get_newRating() -> int:
         
         total = 0
         for opponent in d["Opponents"]:
-            opponents_R = opponent["National rating"]
-            N = opponent["Result"]
-            PD = get_probability(Ro, opponents_R)
-            K = get_growthRate(Ro)
-            delta_R = (N - PD) * K
-            total += delta_R
+            # Если это не bye
+            if opponent["Fullname"] != "bye":
+                opponents_R = opponent["National rating"]
+                N = opponent["Result"]
+                PD = get_probability(Ro, opponents_R)
+                K = get_growthRate(Ro)
+                delta_R = (N - PD) * K
+                print(f"({N} - {PD}) * {K} = {delta_R}")
+                total += delta_R
         Rn = Ro + total
+        print(f"{Rn} = {Ro} + {total}")
     f.close()
     
     return int(Rn)
