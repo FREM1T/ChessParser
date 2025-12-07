@@ -1,6 +1,6 @@
 from requests import get
 from bs4 import BeautifulSoup
-from utils import get_url, print_results, print_info
+from utils import get_url, print_results, print_info, show_plot
 from chess_res_api import *
 from chess_calc import get_newRating, get_oldRating
 
@@ -18,10 +18,15 @@ def main_menu():
             d = get_profile(block)
             create_table(d)
 
-            print_results(get_oldRating(), get_newRating(), profile_url)
+            nR, hist = get_newRating()[0], get_newRating()[1]
+            oR = get_oldRating()
 
-            print_info()
+            print_info(hist, oR, nR)
             
+            flag = input("Желаете посмотреть график изменения рейтинга? Y/n: ").lower()
+            if flag in "y":
+                show_plot(hist, oR)
+
         else:
             # Ошибка доступа к сайту
             print("Сайт временно недоступен, повторите попытку попозже")

@@ -35,18 +35,19 @@ def get_probability(prof_rat, opp_rat) -> float:
     
     return prob
 
-def get_newRating() -> int:
+def get_newRating() -> list:
     # https://ruchess.ru/blogs/tkachev/kuda-za-reytingom-podatsya/
     # PD = 0
     # N = 0
     # K = 0
     Ro = 0 # Rating (old)
     Rn = 0 # Rating (new)
+    history = []
     with open("profile.json", "r", encoding="utf-8") as f:
         d = json.load(f)
         Ro = d["National rating"]
-        
         total = 0
+    
         for opponent in d["Opponents"]:
             # Если это не bye
             if opponent["Fullname"] != "bye":
@@ -55,13 +56,12 @@ def get_newRating() -> int:
                 PD = get_probability(Ro, opponents_R)
                 K = get_growthRate(Ro)
                 delta_R = (N - PD) * K
-                # print(f"({N} - {PD}) * {K} = {delta_R}")
                 total += delta_R
+                history.append(delta_R)
         Rn = Ro + total
-        # print(f"{Rn} = {Ro} + {total}")
     f.close()
     
-    return int(Rn)
+    return [int(Rn), history]
 
 def get_oldRating() -> int:
     Ro = 0
