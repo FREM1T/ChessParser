@@ -58,15 +58,19 @@ def get_profile(block: list) -> dict:
     # Находим индекс нац.рейт.
     line_ind = matches.pop(0).find_all("th")
     nat_rat_flag = False
+    rat_flag = False
     i_rating = 0
     i_fullname = 0
+    i_rating_fide = 0
     for i in range(len(line_ind)):
         if line_ind[i].text == "Имя":
             i_fullname = i
+        if line_ind[i].text == "Рейт.Межд.":
+            rat_flag = True
+            i_rating_fide = i
         if line_ind[i].text == "Рейт.Нац.":
             nat_rat_flag = True
             i_rating = i
-            break
 
     # Заполняем данные для профиля
     chess_profile["Fullname"] = player_info[0]
@@ -89,8 +93,10 @@ def get_profile(block: list) -> dict:
         else:
             res = matches[i].find("table").find("td", class_="CR").text
             fullname = fields[i_fullname].text
-            if nat_rat_flag:
+            if nat_rat_flag or rat_flag:
                 nat_rating = int(fields[i_rating].text)
+                if nat_rating == 0:
+                    nat_rating = int(fields[i_rating_fide].text)
             else:
                 nat_rating = 1000
             i += 1

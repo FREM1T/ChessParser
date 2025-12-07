@@ -19,7 +19,7 @@ def get_growthRate(nat_rat = 1000) -> int:
             
     return growth_rate
 
-def get_probability(prof_rat = 1000, opp_rat = 1000) -> float:
+def get_probability(prof_rat, opp_rat) -> float:
     prob = 0
     
     with open("probs.csv") as f:
@@ -27,8 +27,9 @@ def get_probability(prof_rat = 1000, opp_rat = 1000) -> float:
             line = line.split(";")
             a, b = map(int, line[0].split("-"))
             p1, p2 = map(float, [line[1], line[2]])
+
             if a <= abs(prof_rat-opp_rat) <= b:
-                prob = p1 if prof_rat > opp_rat else p2
+                prob = p1 if (prof_rat - opp_rat > 0) else p2
                 break
     f.close()
     
@@ -54,10 +55,10 @@ def get_newRating() -> int:
                 PD = get_probability(Ro, opponents_R)
                 K = get_growthRate(Ro)
                 delta_R = (N - PD) * K
-                print(f"({N} - {PD}) * {K} = {delta_R}")
+                # print(f"({N} - {PD}) * {K} = {delta_R}")
                 total += delta_R
         Rn = Ro + total
-        print(f"{Rn} = {Ro} + {total}")
+        # print(f"{Rn} = {Ro} + {total}")
     f.close()
     
     return int(Rn)
